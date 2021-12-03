@@ -6,4 +6,3 @@ authors = ["Keval Kapdee"]
 
 [dependencies]
 aoc-lib = {path = "../aoc-lib"}
-itertools = "*"

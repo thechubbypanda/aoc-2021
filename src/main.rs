@@ -1,9 +1,9 @@
-use aoc_lib::run;
+use aoc_lib::*;
 
 mod day1;
 mod day2;
 mod day3;
 
 fn main() {
-    run(2021, 3, day3::part1);
+    run(2021, 3, day3::part2);
 }

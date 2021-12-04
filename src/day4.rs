@@ -1,18 +1,12 @@
-use std::fs;
+use aoc_lib::util::transpose;
 
-fn transpose(input: &Vec<Vec<i32>>) -> Vec<Vec<i32>> {
-    (0..input[0].len())
-        .map(|i| input.iter().map(|line| line[i]).collect())
-        .collect()
-}
+type Board = Vec<Vec<i32>>;
 
 pub fn part1(input: String) -> i32 {
-    let input = fs::read_to_string("input/4.in").unwrap();
     let mut input = input.split("\n\n");
-    let nums = input.next().unwrap();
-    let nums: Vec<i32> = nums.split(",").map(|n| n.parse().unwrap()).collect();
+    let nums: Vec<i32> = input.next().unwrap().split(",").map(|n| n.parse().unwrap()).collect();
 
-    let mut boards: Vec<Vec<Vec<i32>>> = input
+    let mut boards: Vec<Board> = input
         .map(|board| {
             board
                 .lines()
@@ -54,17 +48,15 @@ pub fn part1(input: String) -> i32 {
     0
 }
 
-fn winning_board(board: &Vec<Vec<i32>>) -> bool {
+fn winning_board(board: &Board) -> bool {
     board.iter().any(|row| row.iter().all(|x| *x == -1))
 }
 
 pub fn part2(input: String) -> i32 {
-    let input = fs::read_to_string("input/4.in").unwrap();
     let mut input = input.split("\n\n");
-    let nums = input.next().unwrap();
-    let nums: Vec<i32> = nums.split(",").map(|n| n.parse().unwrap()).collect();
+    let nums: Vec<i32> = input.next().unwrap().split(",").map(|n| n.parse().unwrap()).collect();
 
-    let mut boards: Vec<Vec<Vec<i32>>> = input
+    let mut boards: Vec<Board> = input
         .map(|board| {
             board
                 .lines()
@@ -77,7 +69,7 @@ pub fn part2(input: String) -> i32 {
         })
         .collect();
 
-    let mut last_board: Vec<Vec<i32>> = Vec::new();
+    let mut last_board: Board = Vec::new();
     let mut q = 0;
     for num in nums.into_iter() {
         boards = boards

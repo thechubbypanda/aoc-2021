@@ -5,4 +5,5 @@ edition = "2021"
 authors = ["Keval Kapdee"]
 
 [dependencies]
-aoc-lib = {path = "../aoc-lib"}
+# aoc-lib = {path = "../aoc-lib"}
+aoc-lib = "0.4.3"

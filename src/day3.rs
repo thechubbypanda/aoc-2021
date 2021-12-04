@@ -1,8 +1,4 @@
-fn transpose(input: &Vec<Vec<char>>) -> Vec<Vec<char>> {
-    (0..input[0].len())
-        .map(|i| input.iter().map(|line| line[i]).collect())
-        .collect()
-}
+use aoc_lib::util::{transpose, to_lines};
 
 fn e_and_g(input: &Vec<Vec<char>>) -> (Vec<char>, Vec<char>) {
     let mut gamma = Vec::new();
@@ -21,17 +17,19 @@ fn e_and_g(input: &Vec<Vec<char>>) -> (Vec<char>, Vec<char>) {
     (epsilon, gamma)
 }
 
-fn usize_from_bin_chars(chars: Vec<char>) -> usize {
+fn usize_from_bin_chars(chars: &Vec<char>) -> usize {
     usize::from_str_radix(&chars.into_iter().collect::<String>(), 2).unwrap()
 }
 
-pub fn part1(input: Vec<String>) -> usize {
+pub fn part1(input: String) -> usize {
+    let input = to_lines(&input);
     let input: Vec<Vec<char>> = transpose(&input.iter().map(|x| x.chars().collect()).collect());
     let (epsilon, gamma) = e_and_g(&input);
-    usize_from_bin_chars(epsilon) * usize_from_bin_chars(gamma)
+    usize_from_bin_chars(&epsilon) * usize_from_bin_chars(&gamma)
 }
 
-pub fn part2(input: Vec<String>) -> usize {
+pub fn part2(input: String) -> usize {
+    let input = to_lines(&input);
     let input: Vec<Vec<char>> =input.iter().map(|x| x.chars().collect()).collect();
     let mut o2 = input.clone();
     for i in 0..o2.len() {
@@ -58,5 +56,5 @@ pub fn part2(input: Vec<String>) -> usize {
             break;
         }
     }
-    usize_from_bin_chars(o2[0].clone()) * usize_from_bin_chars(co2[0].clone())
+    usize_from_bin_chars(&o2[0]) * usize_from_bin_chars(&co2[0])
 }

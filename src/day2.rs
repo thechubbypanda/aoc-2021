@@ -1,3 +1,5 @@
+use aoc_lib::util::to_lines;
+
 enum Direction {
     Down,
     Up,
@@ -31,11 +33,11 @@ fn get_dir_x(input: Vec<String>) -> Vec<(Direction, i32)> {
         .collect()
 }
 
-pub fn part1(input: Vec<String>) -> i32 {
+pub fn part1(input: String) -> i32 {
     let mut depth = 0;
     let mut horizontal = 0;
 
-    for (dir, x) in get_dir_x(input) {
+    for (dir, x) in get_dir_x(to_lines(&input)) {
         match dir {
             Direction::Down => depth += x,
             Direction::Up => depth -= x,
@@ -45,12 +47,12 @@ pub fn part1(input: Vec<String>) -> i32 {
     horizontal * depth
 }
 
-pub fn part2(input: Vec<String>) -> i32 {
+pub fn part2(input: String) -> i32 {
     let mut aim = 0;
     let mut depth = 0;
     let mut horizontal = 0;
 
-    for (dir, x) in get_dir_x(input) {
+    for (dir, x) in get_dir_x(to_lines(&input)) {
         match dir {
             Direction::Down => aim += x,
             Direction::Up => aim -= x,

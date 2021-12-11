@@ -12,6 +12,16 @@ const DC: char = '>';
 const OPENS: [char; 4] = [AO, BO, CO, DO];
 const CLOSES: [char; 4] = [AC, BC, CC, DC];
 
+fn get_closing(c: char) -> char {
+    match c {
+        AO => AC,
+        BO => BC,
+        CO => CC,
+        DO => DC,
+        _ => unreachable!(),
+    }
+}
+
 pub fn part1(input: String) -> usize {
     let input = to_lines(&input);
     let mut stack: Vec<char> = Vec::new();
@@ -28,7 +38,7 @@ pub fn part1(input: String) -> usize {
             }
             let q = q.unwrap();
             let p = match c {
-                t if t == get_closer(q) => 0,
+                t if t == get_closing(q) => 0,
                 AC => 3,
                 BC => 57,
                 CC => 1197,
@@ -48,16 +58,6 @@ pub fn part1(input: String) -> usize {
     points
 }
 
-fn get_closer(c: char) -> char {
-    match c {
-        AO => AC,
-        BO => BC,
-        CO => CC,
-        DO => DC,
-        _ => unreachable!(),
-    }
-}
-
 pub fn part2(input: String) -> usize {
     let input = to_lines(&input);
     let mut stack: Vec<char> = Vec::new();
@@ -74,7 +74,7 @@ pub fn part2(input: String) -> usize {
                 break;
             }
             let q = q.unwrap();
-            if c != get_closer(q) {
+            if c != get_closing(q) {
                 bad = true;
                 break;
             }
@@ -84,7 +84,7 @@ pub fn part2(input: String) -> usize {
                 .clone()
                 .into_iter()
                 .rev()
-                .map(get_closer)
+                .map(get_closing)
                 .collect::<Vec<char>>();
             let mut p = 0;
             for c in completion {

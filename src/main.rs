@@ -14,7 +14,8 @@ mod day11;
 mod day12;
 mod day13;
 mod day14;
+mod day15;
 
 fn main() {
-    run(2021, 14, day14::part2);
+    test(2021, 15, day15::part2);
 }

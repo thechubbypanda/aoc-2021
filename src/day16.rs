@@ -1,3 +1,36 @@
+fn take_next(packet: &String, index: &mut usize, len: usize) -> String {
+    *index += len;
+    let s = packet.chars().skip(*index - len).take(len).collect();
+    // println!("{}", s);
+    s
+}
+
+fn from_bin(s: String) -> usize {
+    usize::from_str_radix(&s, 2).unwrap()
+}
+
+fn to_binary(c: char) -> &'static str {
+    match c {
+        '0' => "0000",
+        '1' => "0001",
+        '2' => "0010",
+        '3' => "0011",
+        '4' => "0100",
+        '5' => "0101",
+        '6' => "0110",
+        '7' => "0111",
+        '8' => "1000",
+        '9' => "1001",
+        'A' => "1010",
+        'B' => "1011",
+        'C' => "1100",
+        'D' => "1101",
+        'E' => "1110",
+        'F' => "1111",
+        _ => unreachable!(),
+    }
+}
+
 pub fn part1(input: String) -> usize {
     let input: String = input
         .split_whitespace()
@@ -111,39 +144,6 @@ fn parse_packet_2(packet: &String, index: &mut usize) -> usize {
             }
             0
         },
-        _ => unreachable!(),
-    }
-}
-
-fn take_next(packet: &String, index: &mut usize, len: usize) -> String {
-    *index += len;
-    let s = packet.chars().skip(*index - len).take(len).collect();
-    // println!("{}", s);
-    s
-}
-
-fn from_bin(s: String) -> usize {
-    usize::from_str_radix(&s, 2).unwrap()
-}
-
-fn to_binary(c: char) -> &'static str {
-    match c {
-        '0' => "0000",
-        '1' => "0001",
-        '2' => "0010",
-        '3' => "0011",
-        '4' => "0100",
-        '5' => "0101",
-        '6' => "0110",
-        '7' => "0111",
-        '8' => "1000",
-        '9' => "1001",
-        'A' => "1010",
-        'B' => "1011",
-        'C' => "1100",
-        'D' => "1101",
-        'E' => "1110",
-        'F' => "1111",
         _ => unreachable!(),
     }
 }

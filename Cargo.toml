@@ -8,3 +8,5 @@ authors = ["Keval Kapdee"]
 # aoc-lib = {path = "../aoc-lib"}
 aoc-lib = "0.4.3"
 regex = "*"
+scanf = "*"
+factorial = "*"

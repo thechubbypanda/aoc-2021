@@ -1,7 +1,6 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use aoc_lib::util::to_lines;
-use factorial::Factorial;
 use scanf::sscanf;
 
 pub fn part1(input: String) -> usize {
@@ -50,7 +49,16 @@ type Scores = [u8; 2];
 type Wins = [u64; 2];
 
 pub fn part2(input: String) -> u64 {
-    let ps: States = [4, 8];
+    let ps: Vec<u8> = to_lines(&input)
+        .iter()
+        .map(|l| {
+            let mut a: usize = 0;
+            let mut b = 0;
+            sscanf!(l, "Player {} starting position: {}", a, b).unwrap();
+            b
+        }).collect();
+    let states: States = [ps[0], ps[1]];
+    println!("{:?}", states);
 
     // Caclulates 3 ^ 6 combinations of rolls where a roll is in (1..=3)
     //  returns the sum of the first 3 and the sum of the second 3
@@ -78,7 +86,16 @@ pub fn part2(input: String) -> u64 {
         .flatten()
         .collect();
 
-    let wins = dirac(ps, [0; 2], &mut HashMap::new(), &q_rolls);
+    // Collect the 729 combinations into 49 unique rolls and their appearance counts
+    let flat_rolls: HashMap<[u8; 2], u64> = q_rolls
+        .clone()
+        .into_iter()
+        .collect::<HashSet<[u8; 2]>>()
+        .iter()
+        .map(|u| (*u, q_rolls.iter().filter(|r| **r == *u).count() as u64))
+        .collect();
+
+    let wins = dirac(states, [0; 2], &mut HashMap::new(), &flat_rolls);
     println!("{:?}", wins);
     wins.into_iter().max().unwrap()
 }
@@ -86,31 +103,34 @@ pub fn part2(input: String) -> u64 {
 fn dirac(
     states: States,
     scores: Scores,
-    reference: &mut HashMap<(States, Scores), Wins>,
-    quantum_rolls: &Vec<[u8; 2]>,
+    reference: &mut HashMap<(States, Scores), Wins>, // The "dynamic programming" storage
+    quantum_rolls: &HashMap<[u8; 2], u64>, // All unique roll sums and their counts from 729 (3^6) combinations of rolls
 ) -> Wins {
     if let Some(r) = reference.get(&(states, scores)) {
         return *r;
     }
     let mut wins = [0, 0];
-    for rolls in quantum_rolls.iter() {
-        let mut states = states;
+    for (rolls, count) in quantum_rolls.iter() {
+        let mut new_states = states;
         let mut scores = scores;
         let mut win = false;
         for (i, roll) in rolls.iter().enumerate() {
-            states[i] = (states[i] + *roll) % 10;
-            scores[i] += states[i];
-            if states[i] == 0 {
+            new_states[i] = (new_states[i] + *roll) % 10;
+            scores[i] += new_states[i];
+            if new_states[i] == 0 {
                 scores[i] += 10;
             }
             if scores[i] >= 21 {
-                wins[i] += 1;
+                wins[i] += *count;
                 win = true;
                 break;
             }
         }
         if !win {
-            wins = add_wins(&wins, &dirac(states, scores, reference, quantum_rolls));
+            wins = add_wins(
+                &wins,
+                &scale_wins(&dirac(new_states, scores, reference, quantum_rolls), count),
+            );
         }
     }
     reference.insert((states, scores), wins);
@@ -119,4 +139,8 @@ fn dirac(
 
 fn add_wins(s1: &Wins, s2: &Wins) -> Wins {
     [s1[0] + s2[0], s1[1] + s2[1]]
+}
+
+fn scale_wins(w: &Wins, c: &u64) -> Wins {
+    [w[0] * c, w[1] * c]
 }

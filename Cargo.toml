@@ -9,4 +9,3 @@ authors = ["Keval Kapdee"]
 aoc-lib = "0.4.3"
 regex = "*"
 scanf = "*"
-factorial = "*"

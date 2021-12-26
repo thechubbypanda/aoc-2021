@@ -95,6 +95,7 @@ pub fn part2(input: String) -> u64 {
         .map(|u| (*u, q_rolls.iter().filter(|r| **r == *u).count() as u64))
         .collect();
 
+        println!("{:?}", flat_rolls);
     let wins = dirac(states, [0; 2], &mut HashMap::new(), &flat_rolls);
     println!("{:?}", wins);
     wins.into_iter().max().unwrap()
@@ -111,16 +112,16 @@ fn dirac(
     }
     let mut wins = [0, 0];
     for (rolls, count) in quantum_rolls.iter() {
-        let mut new_states = states;
-        let mut scores = scores;
+        let mut temp_states = states;
+        let mut temp_scores = scores;
         let mut win = false;
         for (i, roll) in rolls.iter().enumerate() {
-            new_states[i] = (new_states[i] + *roll) % 10;
-            scores[i] += new_states[i];
-            if new_states[i] == 0 {
-                scores[i] += 10;
+            temp_states[i] = (temp_states[i] + *roll) % 10;
+            temp_scores[i] += temp_states[i];
+            if temp_states[i] == 0 {
+                temp_scores[i] += 10;
             }
-            if scores[i] >= 21 {
+            if temp_scores[i] >= 21 {
                 wins[i] += *count;
                 win = true;
                 break;
@@ -129,7 +130,7 @@ fn dirac(
         if !win {
             wins = add_wins(
                 &wins,
-                &scale_wins(&dirac(new_states, scores, reference, quantum_rolls), count),
+                &scale_wins(&dirac(temp_states, temp_scores, reference, quantum_rolls), count),
             );
         }
     }
@@ -143,4 +144,4 @@ fn add_wins(s1: &Wins, s2: &Wins) -> Wins {
 
 fn scale_wins(w: &Wins, c: &u64) -> Wins {
     [w[0] * c, w[1] * c]
-}
+}   

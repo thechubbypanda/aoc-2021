@@ -22,6 +22,7 @@ mod day8;
 mod day9;
 mod day21;
 mod day22;
+mod day23;
 
 fn main() {
     test(2021, 21, day21::part2);
